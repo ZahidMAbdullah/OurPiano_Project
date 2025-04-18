@@ -18,9 +18,9 @@
 ## 🔄 Hardware Architecture
 Due to the LOL shield occupying all Arduino pins:
 - Used **I2C** communication to manage three Arduinos:
-  - Master_Buttons: Handles buttons and audio output
-  - Slave1_LOL: Drives the LOL Shield and LED animation
-  - Slave2_Display: Displays score on 2-digit 7-segment display
+  - Master: Handles buttons and audio output
+  - Slave 1: Drives the LOL Shield and LED animation
+  - Slave 2: Displays score on 2-digit 7-segment display
 
 ## 🔊 Features
 - Dynamic difficulty scaling
