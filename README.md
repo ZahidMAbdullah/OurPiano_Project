@@ -1,7 +1,7 @@
 # 🎹 Our Piano - Arduino-Based Piano Tiles Game
 
 **📅 Project Duration**: 2nd Semester Undergraduate (Spring 2024)  
-**👨‍💻 Team**: C.A.N.A [Zahid Muhammad Abdullah, Marilyn Novera, Theron Charlize, Raza Ali]  
+**👨‍💻 Team**: C.A.N.A [Theron Charlize, Zahid Muhammad Abdullah, Marilyn Novera, Raza Ali]  
 **🛠 Platform**: Arduino Uno R3, LOL Shield, I2C Communication, 7-segment Display  
 **💬 Languages**: Arduino (C++), I2C Protocol
 
