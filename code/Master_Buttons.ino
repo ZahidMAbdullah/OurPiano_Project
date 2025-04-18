@@ -15,7 +15,7 @@
     - I2C communication for sending key inputs and transferring score
 
   Author: Zahid Muhammad Abdullah
-  Date: April 2025
+  Date: July 2024
 */
 
 #include <Wire.h>
