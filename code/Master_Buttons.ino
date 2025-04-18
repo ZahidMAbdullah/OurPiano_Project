@@ -1,7 +1,27 @@
+/*
+  master_buttons.ino
+
+  Description:
+  This Arduino sketch serves as the master controller in a multi-Arduino setup for a custom-built piano game inspired by "Piano Tiles." 
+  It reads button presses from 8 piano keys, modulates the note frequency based on potentiometer input (octave shift), 
+  and plays the tones through a speaker. It also communicates over I2C with two slave Arduinos:
+    - Slave 1 (Address 9): Receives key press information and returns updated score (points).
+    - Slave 2 (Address 8): Receives the score to be displayed on an external display module.
+
+  Key Features:
+    - Button-based piano note triggering
+    - Dynamic frequency shift using a potentiometer
+    - Tone generation via speaker (buzz pin)
+    - I2C communication for sending key inputs and transferring score
+
+  Author: Zahid Muhammad Abdullah
+  Date: April 2025
+*/
+
 #include <Wire.h>
 #include <TimerOne.h>
 
-// Defining Frequency Values For Notes
+// -------------------- Note Frequency Definitions --------------------
 #define T_C 262
 #define T_D 294
 #define T_E 330
@@ -9,9 +29,9 @@
 #define T_G 392
 #define T_A 440
 #define T_B 493
-#define T_C1 262*2
+#define T_C1 524  // C one octave above
 
-// Pin Numbers for Notes
+// -------------------- Pin Definitions --------------------
 const int C = 3;
 const int D = 4;
 const int E = 5;
@@ -20,24 +40,19 @@ const int G = 7;
 const int A = 8;
 const int B = 9;
 const int C1 = 10;
-
-volatile int Points; // Variable to store points received from slave
-int Sent_Points; // Variable to store points to be sent to another slave
-
-// Pin For Speaker
 const int Buzz = 11;
+const int potentiometerPin = A0; // For octave shift control
 
-// const int LED = 13; For Debugging
+// -------------------- Global Variables --------------------
+volatile int Points;     // Points received from Slave 1
+int Sent_Points;         // Points to send to Slave 2
 
-// Reading Pin from Potentiometer
-const int potentiometerPin = A0;
-
+// -------------------- Setup --------------------
 void setup() {
   Serial.begin(9600);
-  Wire.begin();
-  // pinMode(LED, OUTPUT); For Debugging
+  Wire.begin(); // Join I2C bus as master
 
-  // Set up input pins for keys with internal pull-up resistors
+  // Initialize key input pins
   pinMode(C, INPUT_PULLUP);
   pinMode(D, INPUT_PULLUP);
   pinMode(E, INPUT_PULLUP);
@@ -48,98 +63,78 @@ void setup() {
   pinMode(C1, INPUT_PULLUP);
 
   Wire.setClock(40000); // Set I2C clock speed
-  Wire.onReceive(receivePoint);  // Register receive event handler for I2C
-  // Timer1.initialize(100000);
-  // Timer1.attachInterrupt(receivePoint);
-  
+  Wire.onReceive(receivePoint);  // I2C receive handler (not actually needed in master)
 }
 
-// To Play frequencies and different Octaves on Speaker 
+// -------------------- Play Tone with Octave Shift --------------------
 void playTone(int baseFrequency, int octaveShift) {
-  int frequency = baseFrequency * (1 << octaveShift); // Multiply base frequency by 2^octaveShift
-  tone(Buzz, frequency); // Play the calculated frequency on the speaker
-  // digitalWrite(LED, HIGH); For DEBUGGING
+  int frequency = baseFrequency * (1 << octaveShift); // frequency × 2^octaveShift
+  tone(Buzz, frequency);
 }
 
-// To Send Key Values to Slave Arduino 1 
+// -------------------- Send Key to Slave 1 --------------------
 void sendKey(char key) {
-  Wire.beginTransmission(9); // Begin transmission to slave with address 9
-  Wire.write(key); // Write the key value
-  Wire.endTransmission(); // End transmission
+  Wire.beginTransmission(9); // Address of Slave 1
+  Wire.write(key);
+  Wire.endTransmission();
 }
 
-// To Receive Points Values from Slave Arduino 1
+// -------------------- Receive Score from Slave 1 --------------------
 void receivePoint() {
-  Wire.requestFrom(9, 6);  // Request data from slave with address 9
-  while (Wire.available()) { // While data is available
-    int Points = Wire.read(); // Read points value
-    Serial.println(Points); // Print points value for debugging
-    if(Points >=0 && Points < 100){
-    Sent_Points = Points; // Store valid points value
+  Wire.requestFrom(9, 6);  // Ask for up to 6 bytes from Slave 1
+  while (Wire.available()) {
+    int received = Wire.read();
+    Serial.println(received); // Debug
+    if (received >= 0 && received < 100) {
+      Sent_Points = received;
     }
-}
+  }
 }
 
-// To Send Points Value to Slave Arduino 2
+// -------------------- Send Score to Slave 2 --------------------
 void sendPoint(int Points) {
-  Wire.beginTransmission(8); // Begin transmission to slave with address 8
-  Wire.write(Points); // Write the points value
-  Wire.endTransmission(); // End transmission
+  Wire.beginTransmission(8); // Address of Slave 2
+  Wire.write(Points);
+  Wire.endTransmission();
 }
 
+// -------------------- Main Loop --------------------
 void loop() {
-  int potValue = analogRead(potentiometerPin); // Read potentiometer value
-  int octaveShift = map(potValue, 0, 1023, 0, 6); // Map potentiometer value to an octave shift between 0 and 6
+  int potValue = analogRead(potentiometerPin);
+  int octaveShift = map(potValue, 0, 1023, 0, 6);
 
-  char keyPressed = '\0'; // Variable to store the key pressed
+  char keyPressed = '\0';
 
-// Check each key pin and play the corresponding tone if pressed
+  // Read buttons and play corresponding tone
   if (digitalRead(C) == LOW) {
-    playTone(T_C, octaveShift);
-    keyPressed = 'C';
+    playTone(T_C, octaveShift); keyPressed = 'C';
   } else if (digitalRead(D) == LOW) {
-    playTone(T_D, octaveShift);
-    keyPressed = 'D';
+    playTone(T_D, octaveShift); keyPressed = 'D';
   } else if (digitalRead(E) == LOW) {
-    playTone(T_E, octaveShift);
-    keyPressed = 'E';
+    playTone(T_E, octaveShift); keyPressed = 'E';
   } else if (digitalRead(F) == LOW) {
-    playTone(T_F, octaveShift);
-    keyPressed = 'F';
+    playTone(T_F, octaveShift); keyPressed = 'F';
   } else if (digitalRead(G) == LOW) {
-    playTone(T_G, octaveShift);
-    keyPressed = 'G';
+    playTone(T_G, octaveShift); keyPressed = 'G';
   } else if (digitalRead(A) == LOW) {
-    playTone(T_A, octaveShift);
-    keyPressed = 'A';
+    playTone(T_A, octaveShift); keyPressed = 'A';
   } else if (digitalRead(B) == LOW) {
-    playTone(T_B, octaveShift);
-    keyPressed = 'B';
+    playTone(T_B, octaveShift); keyPressed = 'B';
   } else if (digitalRead(C1) == LOW) {
-    playTone(T_C1, octaveShift);
-    keyPressed = 'P';
+    playTone(T_C1, octaveShift); keyPressed = 'P';
   } else {
-    noTone(Buzz); // Turn off the speaker if no key is pressed
-    // digitalWrite(LED, LOW);
+    noTone(Buzz); // Silence if no key pressed
   }
 
-  // Send key value to the first slave if a key was pressed, otherwise indicate no key pressed
+  // Send key to Slave 1
   if (keyPressed != '\0') {
     sendKey(keyPressed);
   } else {
-    sendKey('0'); // Indicate no key is pressed
+    sendKey('0'); // Indicates no key pressed
   }
-  delay(150);// Delay to debounce key press
-  // Serial.println(keyPressed); FOR DEBUGGING
-  
-  // Send Key Values to Slave Arduino 1
-  sendKey(keyPressed);
 
-  //  Receiver Point Values from Slave Arduino 1
-  receivePoint();
+  delay(150); // Debounce delay
 
-  // Send Point Values to Slave Arduino 2
-  sendPoint(Sent_Points);
-  // Serial.println(Points); For DEBUGGING
+  receivePoint();         // Get updated score from Slave 1
+  sendPoint(Sent_Points); // Forward score to Slave 2
 }
-
