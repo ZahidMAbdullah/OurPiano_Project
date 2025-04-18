@@ -55,7 +55,6 @@ Watch **"Our Piano"** in action:
 
 ## 🌱 Future Improvements
 - 👥 Multi-player support (dueling piano mode)
-- 🎹 Real piano key integration
 - 🎼 MIDI file parsing for automatic tune generation
 - 🕶 VR integration with haptic gloves *(future concept: AirKeys)*
 
