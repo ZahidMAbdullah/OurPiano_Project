@@ -1,1 +1,33 @@
+I2C Communication Notes - "Our Piano" Project
 
+Overview:
+---------
+The project involves communication between three Arduino Uno boards using the I2C protocol.
+
+I2C Roles:
+----------
+- Master Arduino:
+  - Handles button input from 8 physical buttons.
+  - Sends note values (integers 0 to 7) based on button presses to the slave Arduinos.
+  - Controls the game logic related to user input.
+
+- Slave Arduino 1 (LOL Shield):
+  - Receives note values from the master.
+  - Controls the LED animation corresponding to the current note.
+  - Matches user input with the falling LEDs.
+
+- Slave Arduino 2 (7-Segment Display):
+  - Displays the current score.
+  - Also receives commands from the master via I2C.
+
+I2C Addresses:
+--------------
+Each slave device has a unique I2C address. For example:
+- LOL Shield Arduino: `0x08`
+- 7-Segment Display Arduino: `0x09`
+
+The master uses these addresses to send data to the appropriate slave:
+```cpp
+Wire.beginTransmission(0x08); // Talk to LOL
+Wire.write(note_value);
+Wire.endTransmission();
