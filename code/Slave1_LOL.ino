@@ -2,6 +2,8 @@
   ============================================================================================
   Project: LED Piano Tiles Game (Slave 1)
   Author: Zahid Muhammad Abdullah
+  DATE: July 2024
+
   Description:
     This is the SLAVE Arduino code responsible for handling the LED display in a piano-tile 
     inspired game using the LOL Shield (Charlieplexing). It receives note inputs via I2C 
