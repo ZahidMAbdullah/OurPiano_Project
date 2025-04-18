@@ -1,39 +1,64 @@
 # 🎹 Our Piano - Arduino-Based Piano Tiles Game
 
-**Project Duration**: 2nd Semester Undergraduate (Spring 2024)  
-**Team**: [Your name], [Teammates if any]  
-**Platform**: Arduino Uno R3, LOL Shield, I2C Communication, 7-segment Display  
-**Languages**: Arduino (C++), I2C Protocol
+**📅 Project Duration**: 2nd Semester Undergraduate (Spring 2024)  
+**👨‍💻 Team**: C.A.N.A [Zahid Muhammad Abdullah, Marilyn Novera, Theron Charlize, Raza Ali]  
+**🛠 Platform**: Arduino Uno R3, LOL Shield, I2C Communication, 7-segment Display  
+**💬 Languages**: Arduino (C++), I2C Protocol
+
+---
 
 ## 🔧 Overview
-"Our Piano" is an interactive real-time game inspired by the mobile game *Piano Tiles*, built entirely using Arduinos and LED matrix hardware. Players press buttons in sync with musical notes visualized as falling LEDs.
+**"Our Piano"** is an interactive real-time game inspired by the mobile game *Piano Tiles*, built entirely using Arduino boards and LED matrix hardware. Players must press buttons in sync with musical notes visualized as falling LEDs — like a physical rhythm game.
 
-## 🧠 Gameplay
-- **8 columns** of an LED matrix represent 8 musical notes (C4 to C5).
-- 2 bright LEDs "fall" down a column to indicate which note should be played.
-- Players press buttons corresponding to each note.
-- Points are awarded for correctly timed presses.
-- Game speed increases the longer the player survives; if a mistake is made, the game restarts and gets slightly easier next time.
+---
+
+## 🎮 Gameplay Mechanics
+- 🎵 **8 LED matrix columns** represent musical notes from **C4 to C5**.
+- 🔻 **Two bright LEDs** fall down a column, indicating the note to be played.
+- 🎯 Players press the button mapped to the active note.
+- ✅ Correctly timed presses award points.
+- 🔁 Game speed increases as the player survives longer.
+- ❌ A wrong button press ends the game (missing is allowed).
+- 📉 Restarted games become slightly easier if the player fails repeatedly.
+
+---
 
 ## 🔄 Hardware Architecture
-Due to the LOL shield occupying all Arduino pins:
-- Used **I2C** communication to manage three Arduinos:
-  - Master: Handles buttons and audio output
-  - Slave 1: Drives the LOL Shield and LED animation
-  - Slave 2: Displays score on 2-digit 7-segment display
+Because the LOL shield occupies all Arduino pins, we implemented **I2C communication** to coordinate three Arduinos:
+
+- **Master Arduino**:
+  - Reads button inputs
+  - Produces tone output via a speaker
+- **Slave 1 (LOL Shield Controller)**:
+  - Animates LED note sequences
+- **Slave 2 (Score Display)**:
+  - Shows score on a 2-digit 7-segment display
+
+---
 
 ## 🔊 Features
-- Dynamic difficulty scaling
-- Real-time score display
-- Error detection for mistimed button presses
-- Accurate pitch generation for each note
+- 🎼 Realistic pitch generation for each note (based on frequency)
+- 🧠 Dynamic difficulty adjustment
+- 🕹 Real-time gameplay and scoring
+- 🛑 Mistake detection logic using note-column mapping
+- 🧩 Modular design using I2C for expandability
 
-## 📷 Media
-Check the `media/` folder for images and demo videos of the system in action.
+---
 
-## 🔗 Future Improvements
-- Multi-player support
-- Integration with actual piano keys (instead of buttons)
-- MIDI file parsing to auto-generate tunes
-- VR Integration (e.g., using haptic gloves - for future projects like AirKeys)
+## 🎥 Demo Video
 
+Watch **"Our Piano"** in action:
+
+🔗 [View on Google Drive](https://drive.google.com/file/d/1aexgMx8grHPoIK_tpc_UuSy4uI0Ut3_A/view?usp=share_link)
+
+---
+
+## 🌱 Future Improvements
+- 👥 Multi-player support (dueling piano mode)
+- 🎹 Real piano key integration
+- 🎼 MIDI file parsing for automatic tune generation
+- 🕶 VR integration with haptic gloves *(future concept: AirKeys)*
+
+---
+
+Feel free to explore the full code, circuit diagrams, and notes in the respective folders!
