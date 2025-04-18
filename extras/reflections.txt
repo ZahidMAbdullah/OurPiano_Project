@@ -1,31 +1,19 @@
+Reflections on Building "Our Piano"
 
----
+## What I Learned
 
-### 📄 `ideas_and_reflections.txt`
+- **I2C Communication:** Gained practical experience with the I2C protocol for master-slave communication across multiple Arduino boards.
+- **Game Design Logic:** Learned how to implement a sequence-based reaction game with increasing difficulty and state management.
+- **Arduino LOL Shield:** Understood the LED matrix behavior and challenges with pin limitations.
+- **Embedded Audio Playback:** Mapped musical notes to their frequencies and generated tones using Arduino’s `tone()` function.
+- **Synchronization:** Learned to coordinate animations, audio, input, and scoring in real-time.
+- **Debugging Multi-Device Systems:** Developed patience and skills to troubleshoot timing bugs, electrical issues, and cross-device errors.
 
-```txt
-Ideas and Reflections - "Our Piano" Project
+## Challenges Faced
 
-What We Learned:
-----------------
-- We gained hands-on experience with I2C communication, which is essential for multi-Arduino setups.
-- We learned how to manage multiple devices with different roles (input, display, logic).
-- Using the LOL shield helped us understand the limitations and capabilities of LED matrix animation.
-- We developed a better understanding of note frequencies and how to simulate musical notes with code.
+- **LOL Shield Pin Occupation:** The shield blocked most of the Arduino pins, so we couldn’t add buttons or other components directly. We solved this using I2C with another Arduino.
+- **Timing Issues:** Making sure the button presses were read accurately when the LED was in the scoring zone required careful fine-tuning.
+- **Game Difficulty Balance:** It was hard to make the game fun and not too difficult or too easy. We added a speed adjustment system to gradually adapt based on the player’s performance.
+- **Synchronization Between Arduinos:** Getting all the devices to work together smoothly over I2C required careful planning and consistent data handling.
 
-Challenges Faced:
------------------
-- The LOL shield occupies all GPIO pins, so we had to use multiple Arduinos to separate responsibilities.
-- Getting I2C communication to work reliably required careful synchronization and debugging.
-- LED animation timing and speed adjustments were tricky to balance for enjoyable gameplay.
-- Initially, wrong button presses and missed notes were both causing the game to end, making it frustrating. We had to tweak the rules to allow missed notes but not incorrect ones.
-- Displaying real-time scores and syncing it with the game logic required precision in message-passing between Arduinos.
-
-Future Improvements:
---------------------
-- Add support for multiple tunes and difficulty levels.
-- Display “Game Over” and “High Score” messages visually using the LOL shield.
-- Combine all logic into a single microcontroller with multiplexers or port expanders to simplify hardware.
-
-Overall, it was a fun and educational project that combined game design, electronics, and real-time communication.
-
+This project helped us grow both technically and creatively. It taught us how to bring together hardware, software, and user experience to build something interactive and fun.
