@@ -1,6 +1,6 @@
 /*
   Title    : Slave2 Display Controller for Score
-  Author   : Zahid Muhammad Abdullah, Raza Ali
+  Author   : Raza Ali, Zahid Muhammad Abdullah
   Date     : July 2024
   Purpose  : This Arduino sketch is designed to run on a secondary (slave) Arduino 
              that receives score values over I2C from a master Arduino. The score 
